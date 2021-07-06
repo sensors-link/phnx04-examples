@@ -22,10 +22,14 @@ int adc_example(int time)
 	case 0:
 		SYSC->CLKENCFG |= SYSC_CLKENCFG_ANAC | SYSC_CLKENCFG_IOM;
 	    SDC->ME_CTL |= BIT(0);                 // Step1：设置SDC.ME_CLT.ANAC_EN为1，开启ADC工作模块。
-	                                           // Step2：配置IOM.ADS相应的位，将转化的ADC输入通道配置为模拟端口。
+	    IOM->ADS |= BIT(16);                   // Step2：配置IOM.ADS相应的位，将转化的ADC输入通道配置为模拟端口。
+	    IOM->AF1 |= 1;
 	                                           // Step3：设置IOM.ADS第14位为1，将ADC外部参考电压引脚配置为模拟端口。
 	                                           // 注：如果ADC参考电压不选择外部参考电压引脚，则此步骤可忽略。
-	                                           // Step4：配置SYSC.ANCLKDIV，设置ADC采样时钟即转换速度。
+	    SYSC->ANCLKDIV &= ~(BITS(0, 3));       // Step4：配置SYSC.ANCLKDIV，设置ADC采样时钟即转换速度。
+		SYSC->ANCLKDIV |= (1 << 0);            //       ADC_CLK 4分频，2M
+		SYSC->ANCLKDIV &= ~(BITS(4, 8));
+		SYSC->ANCLKDIV |= (3 << 4);            //       4分频 500KHz
 	    ADC->CFG &=~BITS(4,5);                 // Step5：配置ADC.CFG.VRSEL，选择ADC参考电压输入源。
 	    ADC->CFG |= BIT(0);                    // Step6：设置ADC.CFG.VOLTREF_EN为1，使能内部参考电压模块；设置ADC.CFG.VOLTREF_VRSEL，选择内部参考电压档位。
 	    ADC->CFG &=~BITS(1,3);                 // 注：如果ADC参考电压选择外部参考电压引脚，则此步骤可忽略。
@@ -42,18 +46,24 @@ int adc_example(int time)
 	    ADC->CTL |= BIT(2);                    // Step17：设置ADC.CTL.SST为1，启动ADC转换。
 	    while (!(ANAC->ANAC_FLAG & (1 << 0))); // Step18：等待ADC中断或SDC.ANAC_CFG.ADC_INTF为1，读取ADC_VALx寄存器以获取ADC转换结果。
 	    temp = ADC->AVG_VAL;                   // 如需对其它通道进行转换，重复执行Step16~Step18。
-
-	                                           // Step19：设置ADC.CTL.ADC_EN，ADC.CFG.BUF_EN，SDC.ANAC_CFG.ALDO4A_EN，SDC.ANAC_CFG.BGR_EN为0，关闭BUF模块，ADC模块，ALDO4A模块，BGR模块。
+	    ADC->CTL &= ~BIT(0);                   // Step19：设置ADC.CTL.ADC_EN，ADC.CFG.BUF_EN，SDC.ANAC_CFG.ALDO4A_EN，SDC.ANAC_CFG.BGR_EN为0，关闭BUF模块，ADC模块，ALDO4A模块，BGR模块。
+	    ADC->CFG &= ~BIT(6);
+		SDC->ANAC_CFG &= ~BIT(7);
+		SDC->ANAC_CFG &= ~BIT(6);
 		break;
 	case 1:
 	case 2:
 	case 3:
 		SYSC->CLKENCFG |= SYSC_CLKENCFG_ANAC | SYSC_CLKENCFG_IOM;
 		SDC->ME_CTL |= BIT(0);                 // Step1：设置SDC.ME_CLT.ANAC_EN为1，开启ADC工作模块。
-		                                       // Step2：配置IOM.ADS相应的位，将转化的ADC输入通道配置为模拟端口。
+		IOM->ADS |= BIT(16);                   // Step2：配置IOM.ADS相应的位，将转化的ADC输入通道配置为模拟端口。
+		IOM->AF1 |= 1;
 		                                       // Step3：设置IOM.ADS第14位为1，将ADC外部参考电压引脚配置为模拟端口。
 		                                       // 注：如果ADC参考电压不选择外部参考电压引脚，则此步骤可忽略。
-		                                       // Step4：配置SYSC.ANCLKDIV，设置ADC采样时钟即转换速度。
+		SYSC->ANCLKDIV &= ~(BITS(0, 3));       // Step4：配置SYSC.ANCLKDIV，设置ADC采样时钟即转换速度。
+		SYSC->ANCLKDIV |= (1 << 0);            //       ADC_CLK 4分频，2M
+		SYSC->ANCLKDIV &= ~(BITS(4, 8));
+		SYSC->ANCLKDIV |= (3 << 4);            //       4分频 500KHz
 		ADC->CFG &=~BITS(4,5);                 // Step5：配置ADC.CFG.VRSEL，选择ADC参考电压输入源。
 		ADC->CFG |= BIT(0);                    // Step6：设置ADC.CFG.VOLTREF_EN为1，使能内部参考电压模块；设置ADC.CFG.VOLTREF_VRSEL，选择内部参考电压档位。
 		ADC->CFG &=~BITS(1,3);                 // 注：如果ADC参考电压选择外部参考电压引脚，则此步骤可忽略。
@@ -70,7 +80,10 @@ int adc_example(int time)
 		ADC->CTL |= BIT(2);                    // Step17：设置ADC.CTL.SST为1，启动ADC转换。
 		while (!(ANAC->ANAC_FLAG & (1 << 0))); // Step18：等待ADC中断或SDC.ANAC_CFG.ADC_INTF为1，读取ADC_VALx寄存器以获取ADC转换结果。
 		temp = ADC->AVG_VAL;                   // 如需对其它通道进行转换，重复执行Step17~Step19。
-		                                       // Step19：设置ADC.CTL.ADC_EN，ADC.CFG.BUF_EN，SDC.ANAC_CFG.ALDO4A_EN，SDC.ANAC_CFG.BGR_EN为0，关闭BUF模块，ADC模块，ALDO4A模块，BGR模块。
+		ADC->CTL &= ~BIT(0);                   // Step19：设置ADC.CTL.ADC_EN，ADC.CFG.BUF_EN，SDC.ANAC_CFG.ALDO4A_EN，SDC.ANAC_CFG.BGR_EN为0，关闭BUF模块，ADC模块，ALDO4A模块，BGR模块。
+		ADC->CFG &= ~BIT(6);
+		SDC->ANAC_CFG &= ~BIT(7);
+		SDC->ANAC_CFG &= ~BIT(6);
 		break;
 	default:
 		break;
