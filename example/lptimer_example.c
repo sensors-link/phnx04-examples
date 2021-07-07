@@ -32,10 +32,24 @@ void LPT_IrqHandler(void)
     printf("tog %x\n", tog);
 };
 
-int lptimer_example(int delay)
+int lptimer_count(void)
+{
+    return LPT_GetCount();
+}
+SHELL_EXPORT_CMD(lptimer_count, lptimer_count, get lptimer count);
+
+int lptimer_example(int mode, int delay)
 {
     GPIO_PinConfigure(LED_PIN, DISABLE, ENABLE, ENABLE, DISABLE, DISABLE);
-    LPT_Init(LP_CLKSEL_LRC, delay, LPT_PIT_CNT);
+
+    if(mode)
+    {
+        LPT_Init(LP_CLKSEL_LRC, delay, LPT_PIT_CNT);
+    }
+    else
+    {
+    	LPT_Init(LP_CLKSEL_LRC, delay, LPT_SIG_TIME_CNT);
+    }
     PLIC_EnableIRQ(LPT_IRQn);
     PLIC_SetPriority(LPT_IRQn, 1);
     LPT_ClrIntFlag();
@@ -45,4 +59,4 @@ int lptimer_example(int delay)
 
     return delay;
 }
-SHELL_EXPORT_CMD(lptimer_example, lptimer_example, input delay<0 - xxx>);
+SHELL_EXPORT_CMD(lptimer_example, lptimer_example, mode<0-1> delay<0-xxx>);
