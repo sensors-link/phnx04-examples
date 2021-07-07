@@ -13,6 +13,8 @@
 
 #include "phnx04.h"
 
+#define TIME_DIFF(s,e) ((s)-(int)(e))
+
 int hal_init(void);
 void DelayNus(u32 delay);
 

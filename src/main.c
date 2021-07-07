@@ -15,7 +15,7 @@
 
 int main(void)
 {
-	hal_init();
+    hal_init();
 
 	printf("Hello world\r\n");
 
