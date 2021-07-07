@@ -43,5 +43,7 @@ int tim_timer_example(int delay)
     TIM_EnableIRQ(TIM1);
 
     TIM_EnableControl(TIM1, ENABLE);
+
+    return 0;
 }
 SHELL_EXPORT_CMD(timer_example, tim_timer_example, input delay<0 - xxx>);

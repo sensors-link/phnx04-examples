@@ -10,6 +10,7 @@
  */
 
 #include "lib_include.h"
+#include "shell.h"
 
 int tim_counter_example(void)
 {
@@ -17,4 +18,7 @@ int tim_counter_example(void)
     //TIM_CounterInit(TIM1, TIM_CNT_POLARITY_HIGH, TIM1_CNT_PORT_P8_P9);
     u32 cnt = TIM1->CTVAL;
     printf("cnt:%d\r\n", cnt);
+
+    return 0;
 }
+SHELL_EXPORT_CMD(counter_example, tim_counter_example, timer counter example);
