@@ -38,7 +38,7 @@ int gpio_int_example(void)
 
     GPIO_PinIRQControl(TEST_PIN, ENABLE);
 
-    printf("poll test pin gp08 generate int\r\n");
+    printf("poll test pin gp12 generate int\r\n");
 
     return TEST_PIN;
 }
