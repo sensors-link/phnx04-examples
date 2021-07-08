@@ -14,11 +14,19 @@
 
 int tim_counter_example(void)
 {
-    printf("p09 input counter pulse,press any key to print cnt value\r\n");
-    //TIM_CounterInit(TIM1, TIM_CNT_POLARITY_HIGH, TIM1_CNT_PORT_P8_P9);
-    u32 cnt = TIM1->CTVAL;
-    printf("cnt:%d\r\n", cnt);
+	static u8 flag = 1;
+	u32 cnt;
 
-    return 0;
+	if(flag)
+	{
+        printf("gpio13 input counter pulse\n");
+
+        GPIO_PinSelect(GPIO_PIN12 | GPIO_PIN13, PIN_FUNC_2);
+        TIM_CounterInit(TIM2, TIM_CNT_POLARITY_LOW);
+        flag = 0;
+	}
+    cnt = TIM1->CTVAL;
+
+    return cnt;
 }
 SHELL_EXPORT_CMD(counter_example, tim_counter_example, timer counter example);
