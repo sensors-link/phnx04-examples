@@ -10,12 +10,22 @@
  */
 
 #include "lib_include.h"
+#include "risc_v_csr.h"
+#include "system_phnx04.h"
 #include "shell.h"
 
 #define MTIMECMPLO    (0xE0000004)
 #define MTIMECMPHI    (0xE0000008)
 #define MTIMELO       (0xE000000C)
 #define MTIMEHI       (0xE0000010)
+
+/* This is the timer interrupt service routine. */
+void MTIM_IntHandler(void)
+{
+    /* clear value */
+	REG32(MTIMECMPLO) = REG32(MTIMELO) + 0x1000;
+	REG32(MTIMECMPHI) = REG32(MTIMEHI) + 0x1000;
+}
 
 int mtime_example(void)
 {
@@ -24,17 +34,22 @@ int mtime_example(void)
 	int diff[100] = {0};
 	int i = 0;
 
-	REG32(MTIMECMPLO) = 0x10;
+	REG32(MTIMECMPLO) = 0x800;
 	REG32(MTIMECMPHI) = 0x00;
 	REG32(MTIMELO)    = 0x00;
 	REG32(MTIMEHI)    = 0x00;
 
-	SoftTrigIRQ();
+	EnableMtimeIRQ();
 
 	count = REG32(MTIMELO);
 
 	for(i=0; i<100; i++)
 	{
+		REG32(MTIMECMPLO) = 0x800;
+	    REG32(MTIMECMPHI) = 0x00;
+		REG32(MTIMELO)    = 0x00;
+		REG32(MTIMEHI)    = 0x00;
+
 		count = REG32(MTIMELO);
 		diff[i] = count - prev_count;
 		printf("%d, %d\n", count, diff[i]);
