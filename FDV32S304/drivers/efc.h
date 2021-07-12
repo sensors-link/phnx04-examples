@@ -87,9 +87,9 @@ typedef enum _EFC_RETURN_TYPE {
     EFC_FLASH_WRITE_FAIL,
 } eReturnType;
 
-#define EFC_PRG_BYTE 	0
-#define EFC_PRG_HWORD 	1
-#define EFC_PRG_WORD 	2
+#define EFC_PRG_BYTE 	   0
+#define EFC_PRG_HWORD 	   1
+#define EFC_PRG_WORD 	   2
 
 
 // extern function declare
