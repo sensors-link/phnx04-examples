@@ -23,8 +23,12 @@
 void MTIM_IntHandler(void)
 {
     /* clear value */
-	REG32(MTIMECMPLO) = REG32(MTIMELO) + 0x1000;
-	REG32(MTIMECMPHI) = REG32(MTIMEHI) + 0x1000;
+	REG32(MTIMECMPLO) = 65000;
+    REG32(MTIMECMPHI) = 0x00;
+	REG32(MTIMELO)    = 0x00;
+	REG32(MTIMEHI)    = 0x00;
+
+	printf("MTIM_IntHandler\r\n");
 }
 
 int mtime_example(void)
@@ -34,7 +38,7 @@ int mtime_example(void)
 	int diff[100] = {0};
 	int i = 0;
 
-	REG32(MTIMECMPLO) = 0x800;
+	REG32(MTIMECMPLO) = 65000;
 	REG32(MTIMECMPHI) = 0x00;
 	REG32(MTIMELO)    = 0x00;
 	REG32(MTIMEHI)    = 0x00;
@@ -45,11 +49,6 @@ int mtime_example(void)
 
 	for(i=0; i<100; i++)
 	{
-		REG32(MTIMECMPLO) = 0x800;
-	    REG32(MTIMECMPHI) = 0x00;
-		REG32(MTIMELO)    = 0x00;
-		REG32(MTIMEHI)    = 0x00;
-
 		count = REG32(MTIMELO);
 		diff[i] = count - prev_count;
 		printf("%d, %d\n", count, diff[i]);
