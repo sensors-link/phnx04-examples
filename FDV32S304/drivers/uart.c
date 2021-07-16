@@ -36,6 +36,7 @@ void UART_Init(UART_Type *psUart, int port, int mode, int iBaud)
         PARAM_CHECK((port != UART1_PORT_P14_P15) && (port != UART1_PORT_P18_P19));
         if (port == UART1_PORT_P14_P15)
         {
+        	IOM->PU |= GPIO_PIN14;
             IOM->AF0 &= ~IOM_AF0_P14_SEL;
             IOM->AF0 |= (1 << 28);
             IOM->AF0 &= ~IOM_AF0_P15_SEL;
@@ -43,6 +44,7 @@ void UART_Init(UART_Type *psUart, int port, int mode, int iBaud)
         }
         else
         {
+        	IOM->PU |= GPIO_PIN18;
             IOM->AF1 &= ~IOM_AF1_P18_SEL;
             IOM->AF1 |= (3 << 4);
             IOM->AF1 &= ~IOM_AF1_P19_SEL;
@@ -76,6 +78,7 @@ void UART_Init(UART_Type *psUart, int port, int mode, int iBaud)
         PARAM_CHECK((port != UART2_PORT_P04_P05) && (port != UART2_PORT_P06_P07));
         if (port == UART2_PORT_P04_P05)
         {
+        	IOM->PU |= GPIO_PIN4;
             IOM->AF0 &= ~IOM_AF0_P04_SEL;
             IOM->AF0 |= (2<< 8);
             IOM->AF0 &= ~IOM_AF0_P05_SEL;
@@ -83,6 +86,7 @@ void UART_Init(UART_Type *psUart, int port, int mode, int iBaud)
         }
         else
         {
+        	IOM->PU |= GPIO_PIN6;
             IOM->AF0 &= ~IOM_AF0_P06_SEL;
             IOM->AF0 |= (3 << 12);
             IOM->AF0 &= ~IOM_AF0_P07_SEL;
