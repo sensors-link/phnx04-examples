@@ -28,15 +28,17 @@ void LPT_Init(int iClkSrc, int iDel, int iMode) {
     SYSC->CLKENCFG |= SYSC_CLKENCFG_LPTIM;
 
     LPTIM->CFG = (iDel >> 2) - 1;
-    if (iMode == LPT_SIG_TIME_CNT) {
+    if (iMode == LPT_SIG_TIME_CNT)
+    {
         LPTIM->CR &= ~LPTIM_CR_PITE;
-    } else {
+    } else
+    {
         LPTIM->CR |= LPTIM_CR_PITE;
     }
     PMU->WPT = PMU_WPT_V0;
     PMU->WPT = PMU_WPT_V1;
     PMU->CR |= PMU_CR_LPTCLKEN;
-//    LPTIM->CR |= LPTIM_CR_EN;
+    //LPTIM->CR |= LPTIM_CR_EN;
 }
 
 /**
@@ -44,17 +46,23 @@ void LPT_Init(int iClkSrc, int iDel, int iMode) {
  *
  * @param iCtrl:ENABLE or DISABLE
  */
-void LPT_EnableControl(int iCtrl) {
+void LPT_EnableControl(int iCtrl)
+{
     if (iCtrl == ENABLE)
+    {
         LPTIM->CR |= LPTIM_CR_EN;
+    }
     else
+    {
         LPTIM->CR &= ~LPTIM_CR_EN;
+    }
 }
 /**
  * @brief Lptime deinit
  *
  */
-void LPT_DeInit(void) {
+void LPT_DeInit(void)
+{
     PMU->WPT = PMU_WPT_V0;
     PMU->WPT = PMU_WPT_V1;
     PMU->CR &= ~PMU_CR_LPTCLKEN;
@@ -77,13 +85,17 @@ void LPT_DisableIRQ(void) { LPTIM->CR &= ~LPTIM_CR_IE; }
  *
  * @return u16 :16bit count
  */
-u16 LPT_GetCount(void) {
+u16 LPT_GetCount(void)
+{
     u16 tmp0, tmp1;
-    while (1) {
+    while (1)
+    {
         tmp0 = LPTIM->CNT & LPTIM_CNT;
         tmp1 = LPTIM->CNT & LPTIM_CNT;
         if (tmp0 == tmp1)
+        {
             break;
+        }
     }
     return tmp0;
 }

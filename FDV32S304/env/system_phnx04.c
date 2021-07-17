@@ -65,7 +65,7 @@ void SystemInit(void) {
     UART_Init(UART2, UART2_PORT_P04_P05, UART_MODE_10B_ASYNC, _BAUD_FREQ);
 #else
     UART_DeInit(UART1);
-    UART_Init(UART1, UART1_PORT_P14_P15, UART_MODE_10B_ASYNC, _BAUD_FREQ);
+    UART_Init(UART1, UART1_PORT_P18_P19, UART_MODE_10B_ASYNC, _BAUD_FREQ);
 #endif
 #endif
     WRITE_CSR(mtvec, &trap_entry);
