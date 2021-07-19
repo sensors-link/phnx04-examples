@@ -21,10 +21,9 @@
  */
 void TIM_TimerInit(TIM_Type *pTim, int del)
 {
-    SYSC->CLKENCFG |= SYSC_CLKENCFG_TIM_PCK | SYSC_CLKENCFG_IOM;
-    SystemCoreClockUpdate();
+    SYSC->CLKENCFG |= SYSC_CLKENCFG_TIM_PCK;
     PARAM_CHECK((pTim != TIM1) && (pTim != TIM2))
-    SYSC->CLKENCFG |= SYSC_CLKENCFG_TIM_PCK | SYSC_CLKENCFG_IOM;
+    SYSC->CLKENCFG |= SYSC_CLKENCFG_TIM_PCK;
 
     if (pTim == TIM1)
     {
